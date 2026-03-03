@@ -22,9 +22,9 @@ Dirancang untuk perpustakaan sekolah dengan kebutuhan transaksi menengah hingga 
 ---
 
 ## Struktur File
-circulation_kiosk.plugin.php
-self_extend_kiosk.php
-self_return_kiosk.php
+- circulation_kiosk.plugin.php
+- self_extend_kiosk.php
+- self_return_kiosk.php
 
 ---
 
@@ -50,8 +50,7 @@ index.php?p=kiosk_return&key=YOUR_TOKEN
 - loan.is_return
 - mst_member_type.loan_periode
 - system_log
-
-Tidak memerlukan perubahan struktur database.
+- Tidak memerlukan perubahan struktur database.
 
 ---
 
