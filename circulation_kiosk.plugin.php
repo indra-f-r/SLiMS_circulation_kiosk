@@ -1,8 +1,11 @@
 <?php
 /**
  * Plugin Name: Circulation Kiosk
- * Description: Plugin Sirkulasi Mandiri SLiMS (Full Kiosk Mode)
+ * Plugin URI: https://github.com/indra-f-r/SLiMS_circulation_kiosk
+ * Description: Plugin Pengembalian dan Perpanjangan Mandiri SLiMS (Full Kiosk Mode)
  * Version: 1.2.0
+ * Author: Indra Febriana Rulliawan (indra.f.rulliawan@gmail.com)
+ * Author URI: https://github.com/indra-f-r
  */
 
 defined('INDEX_AUTH') OR die('Direct access not allowed!');
@@ -66,5 +69,6 @@ Plugins::hook(Plugins::CONTENT_BEFORE_LOAD, function () {
 
 
 });
+
 
 
