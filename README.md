@@ -69,9 +69,8 @@ index.php?p=kiosk_return&key=YOUR_TOKEN
 3. di layar akan terlihat nama, ID Anggota dan banyak pinjaman, auto countdown 5 detik dan reset ke field scan
 4. Scan QRCode/Barcode pada Buku, akan terlihat status peminjaman
 5. Jika masih dalam durasi peminjaman maka akan di tambah sesuai dengan aturan peminjaman sesuai jenis keanggotaan, dihitung dari akhir peminjaman BUKAN tanggal Perpanjangan 
-6. Jika terlambat akan muncul peringatan dan otomatis muncul jumlah denda yang harus dibayar, dan dan muncul notifikasi untuk menyelesaikan denda ke petugas
-7. auto countdown 5 detik dan reset ke field Scan Member ID
-8. Ulangi Langkah 4 & 5 untuk buku lainnya
+6. Jika terlambat akan muncul peringatan dan otomatis muncul jumlah denda yang harus dibayar, dan dan muncul notifikasi untuk menyelesaikan denda ke petugas, auto countdown 5 detik dan reset ke field Scan Member ID
+8. Ulangi Langkah 4 s.d 6 untuk buku lainnya
 9. Transaksi Selesai
 
 ## Author
