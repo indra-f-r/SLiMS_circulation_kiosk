@@ -23,7 +23,13 @@ Plugins::hook(Plugins::CONTENT_BEFORE_LOAD, function () {
 
     $page = $_GET['p'] ?? '';
     $key  = $_GET['key'] ?? '';
-
+    /*
+    |--------------------------------------------------------------------------
+    |TOKEN
+    |--------------------------------------------------------------------------
+    | Generate Token menggunakan online token generator
+    | Di sesuaikan dengan Kebutuhan
+    */
     $TOKEN = 'YOUR TOKEN';
 
     /*
@@ -77,3 +83,4 @@ Plugins::hook(Plugins::CONTENT_BEFORE_LOAD, function () {
 
 
 });
+
