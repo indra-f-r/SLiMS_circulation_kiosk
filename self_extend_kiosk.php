@@ -7,14 +7,10 @@ $db = DB::getInstance();
 date_default_timezone_set('Asia/Jakarta');
 $db->exec("SET time_zone = '+07:00'");
 
-$TOKEN='z0Z6olm5RMred0XoksEliwk4CSTL5TZwomNd4d4X4veOB3zFj3u1jMLlEjgXLLvKFHqQwmUDir4iVGfNsLvtetmG6sb9xMGup4FXgqguE4u17TAhjlRODnevsI8junWUSQH6N9DjSWkhkHsVqw2kMERa1yPfQoeyZYI2QCXPP3p7PzykH2iWDmcojSuc2eLxqD7T4xHyyoBKz8G3kA5T7UmzEANJNl9IsDEXfBR38OM32Nq093iTlX3KDFnVCs4stffRFNaAdEnxMXVLWJzQ8OnT4HzzMOcrQBCcz2c5CrXvHEiiIH7KrUQ1ZDxWH1NtHE3RciZq9uNWhQjqO41lPFmXTKkLdK0t2C1Tpr0YCcGwTYweeVoLEY3R81lLnN0B31EGKfI48MDGsgH8BJwVqnuyEsSPyKd55EHegC68YdF2Zi7xQdAHJjdtTvNFnAiLSau6HsmG2f9J3uweynLptbBWHpnZqE2D7i4M0B6h9yGTFuMmVa4xOESe8pNUH9tJ';
-
-if(($_GET['key'] ?? '') !== $TOKEN){
+if (($_GET['key'] ?? '') !== $TOKEN) {
     http_response_code(403);
     die('ACCESS DENIED');
 }
-
-/* ================= LOG ================= */
 
 function sys_log($db,$member,$action,$msg){
     $stmt=$db->prepare("
@@ -26,18 +22,15 @@ function sys_log($db,$member,$action,$msg){
     $stmt->execute([$member,$action,$msg]);
 }
 
-/* ================= AJAX ================= */
-
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
     header('Content-Type: application/json');
-    $mode=$_POST['mode'] ?? '';
 
-    /* ===== CEK MEMBER ===== */
+    $mode=$_POST['mode'] ?? '';
 
     if($mode=='member'){
 
-        $member=$_POST['member'] ?? '';
+        $member=trim($_POST['member'] ?? '');
 
         $stmt=$db->prepare("
             SELECT m.member_id,m.member_name,m.member_type_id,
@@ -71,12 +64,10 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         exit;
     }
 
-    /* ===== PROSES EXTEND ===== */
-
     if($mode=='extend'){
 
-        $member=$_POST['member'] ?? '';
-        $item=$_POST['item'] ?? '';
+        $member=trim($_POST['member'] ?? '');
+        $item=trim($_POST['item'] ?? '');
         $today=date('Y-m-d');
 
         $stmt=$db->prepare("
@@ -99,11 +90,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
             exit;
         }
 
-        /* ==== VALIDASI ==== */
-
         if($today > $loan['due_date']){
-            sys_log($db,$member,'extend_denied',
-                "Overdue - item $item");
+            sys_log($db,$member,'extend_denied',"Overdue - item $item");
             echo json_encode([
                 'ok'=>false,
                 'msg'=>'Tidak Bisa Diperpanjang<br>Silakan hubungi petugas'
@@ -112,8 +100,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         }
 
         if($loan['renewed'] >= 1){
-            sys_log($db,$member,'extend_denied',
-                "Already extended - item $item");
+            sys_log($db,$member,'extend_denied',"Already extended - item $item");
             echo json_encode([
                 'ok'=>false,
                 'msg'=>'Tidak Bisa Diperpanjang<br>Silakan hubungi petugas'
@@ -121,15 +108,12 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
             exit;
         }
 
-        /* ==== HITUNG DUE DATE BARU ==== */
-
         $old_due=$loan['due_date'];
-        $new_due=date('Y-m-d',
-            strtotime("+".$loan['loan_periode']." days",
-            strtotime($old_due))
-        );
 
-        /* ==== UPDATE ==== */
+        $new_due=date(
+            'Y-m-d',
+            strtotime("+".$loan['loan_periode']." days",strtotime($old_due))
+        );
 
         $stmt=$db->prepare("
             UPDATE loan
@@ -140,8 +124,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         ");
         $stmt->execute([$new_due,$loan['loan_id']]);
 
-        sys_log($db,$member,'extend',
-            "Extend item $item from $old_due to $new_due");
+        sys_log($db,$member,'extend',"Extend item $item from $old_due to $new_due");
 
         echo json_encode([
             'ok'=>true,
@@ -155,6 +138,10 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
 $baseURL=rtrim($sysconf['baseurl'],'/').'/';
 $logo=$baseURL.'images/default/logo.png?v='.time();
+
+header("Cache-Control: no-store, no-cache, must-revalidate");
+header("Pragma: no-cache");
+
 ?>
 
 <!DOCTYPE html>
@@ -164,6 +151,7 @@ $logo=$baseURL.'images/default/logo.png?v='.time();
 <title>Perpanjangan Mandiri</title>
 
 <style>
+
 body{
   background:#1565d8;
   color:white;
@@ -171,30 +159,101 @@ body{
   text-align:center;
   margin:0;
 }
-.logo{width:130px;margin-top:25px}
+
+.logo{
+  width:130px;
+  margin-top:25px;
+}
+
 input{
-  width:450px;
-  padding:18px;
-  font-size:22px;
+  width:700px;
+  max-width:90%;
+  padding:20px;
+  font-size:24px;
   border-radius:12px;
   border:none;
-  margin:12px;
+  margin:14px;
+  text-align:center;
 }
-.info{margin-top:15px;font-size:20px;color:#ffd54f}
-.result{margin-top:20px;font-size:20px;color:#ffd54f}
-.countdown{margin-top:10px;color:#ffff99}
+
+.info{
+  margin-top:15px;
+  font-size:20px;
+  color:#ffd54f;
+}
+
+.result{
+  margin-top:20px;
+  font-size:20px;
+  color:#ffd54f;
+}
+
+.countdown{
+  margin-top:10px;
+  color:#ffff99;
+}
+
+.ok{
+  color:#00ff99;
+  font-weight:bold;
+}
+
+.running-container{
+  width:700px;
+  margin:15px auto 10px auto;
+  overflow:hidden;
+  background:rgba(255,255,255,0.12);
+  border-radius:10px;
+  padding:8px 0;
+}
+
+.running-text{
+  display:inline-block;
+  white-space:nowrap;
+  font-size:18px;
+  font-weight:bold;
+  color:#ffd54f;
+  padding-left:100%;
+  animation:runningText 40s linear infinite;
+}
+
+@keyframes runningText{
+  from{transform:translateX(0);}
+  to{transform:translateX(-100%);}
+}
+
 </style>
 </head>
 
 <body>
 
 <img src="<?= $logo ?>" class="logo">
+
 <h1><?= $sysconf['library_name'] ?></h1>
 <h2>Layanan Perpanjangan Mandiri</h2>
 
-<input id="member" placeholder="SCAN KARTU ANGGOTA">
+<div class="running-container">
+<div class="running-text">
+📌 Petunjuk Penggunaan :
+&nbsp;&nbsp;&nbsp;
+1. Siapkan Kartu Anggota
+&nbsp;&nbsp;•&nbsp;&nbsp;
+2. Scan Barcode/QRCode Kartu Anggota
+&nbsp;&nbsp;•&nbsp;&nbsp;
+3. Scan Barcode/QRCode Buku yang Akan Diperpanjang
+&nbsp;&nbsp;•&nbsp;&nbsp;
+4. Perhatikan Status Perpanjangan
+&nbsp;&nbsp;•&nbsp;&nbsp;
+5. Jika buku sudah pernah diperpanjang atau melewati jatuh tempo
+&nbsp;&nbsp;•&nbsp;&nbsp;
+Silakan hubungi petugas
+&nbsp;&nbsp;&nbsp;📚
+</div>
+</div>
+
+<input id="member" placeholder="MASUKKAN MEMBER ID / SCAN KARTU ANGGOTA">
 <br>
-<input id="item" placeholder="SCAN QRCODE/BARCODE BUKU" disabled>
+<input id="item" placeholder="MASUKKAN ITEM ID / SCAN BARCODE BUKU" disabled>
 
 <div id="memberInfo" class="info"></div>
 <div id="result" class="result"></div>
@@ -210,16 +269,14 @@ const countdown=document.getElementById('countdown');
 
 let timer=null;
 let interval=null;
-
-/* ================= FULLSCREEN AUTO ================= */
+let scanMemberTimer=null;
+let scanItemTimer=null;
 
 async function enterFullscreen(){
     if(!document.fullscreenElement){
         try{
             await document.documentElement.requestFullscreen();
-        }catch(err){
-            console.log("Fullscreen gagal:",err);
-        }
+        }catch(e){}
     }
 }
 
@@ -228,55 +285,56 @@ window.addEventListener('load',()=>{
     m.focus();
 });
 
-/* ================= RESET ================= */
-
 function resetAll(){
+
     clearTimeout(timer);
     clearInterval(interval);
 
     m.disabled=false;
     i.disabled=true;
+
     m.value='';
     i.value='';
+
     memberInfo.innerHTML='';
     result.innerHTML='';
     countdown.innerHTML='';
+
     m.focus();
 }
-
-/* ================= COUNTDOWN 5 DETIK ================= */
 
 function startCountdown(){
 
     clearTimeout(timer);
     clearInterval(interval);
 
-    let sec=5;
+    let sec=10;
+
     countdown.innerHTML="Reset dalam "+sec+" detik";
 
     interval=setInterval(()=>{
+
         sec--;
         countdown.innerHTML="Reset dalam "+sec+" detik";
+
         if(sec<=0){
             clearInterval(interval);
         }
+
     },1000);
 
-    timer=setTimeout(resetAll,5000);
+    timer=setTimeout(resetAll,10000);
 }
 
-/* ================= SCAN MEMBER ================= */
+async function processMember(){
 
-m.addEventListener('keydown',async function(e){
-
-    if(e.key!='Enter') return;
-    if(m.value.trim()=='') return;
+    if(m.value.trim()==='') return;
 
     const fd=new FormData();
     fd.append('mode','member');
     fd.append('member',m.value);
 
-    const res=await fetch('?key=<?= $TOKEN ?>',{method:'POST',body:fd});
+    const res=await fetch(window.location.href,{method:'POST',body:fd});
     const j=await res.json();
 
     if(!j.ok){
@@ -294,16 +352,12 @@ m.addEventListener('keydown',async function(e){
     i.disabled=false;
     i.focus();
 
-    // 🔥 langsung mulai countdown setelah scan kartu
     startCountdown();
-});
+}
 
-/* ================= SCAN ITEM ================= */
+async function processItem(){
 
-i.addEventListener('keydown',async function(e){
-
-    if(e.key!='Enter') return;
-    if(i.value.trim()=='') return;
+    if(i.value.trim()==='') return;
 
     clearTimeout(timer);
     clearInterval(interval);
@@ -313,7 +367,7 @@ i.addEventListener('keydown',async function(e){
     fd.append('member',m.value);
     fd.append('item',i.value);
 
-    const res=await fetch('?key=<?= $TOKEN ?>',{method:'POST',body:fd});
+    const res=await fetch(window.location.href,{method:'POST',body:fd});
     const j=await res.json();
 
     if(!j.ok){
@@ -324,7 +378,7 @@ i.addEventListener('keydown',async function(e){
         return;
     }
 
-    let html="Perpanjangan Berhasil<br>";
+    let html="<span class='ok'>Perpanjangan Berhasil</span><br>";
     html+="Judul : "+j.title+"<br>";
     html+="Jatuh Tempo Lama : "+j.old_due+"<br>";
     html+="Jatuh Tempo Baru : "+j.new_due;
@@ -334,15 +388,44 @@ i.addEventListener('keydown',async function(e){
     i.value='';
     i.focus();
 
-    // 🔥 countdown juga setelah sukses
     startCountdown();
+}
+
+m.addEventListener('input',function(){
+
+    clearTimeout(scanMemberTimer);
+
+    scanMemberTimer=setTimeout(()=>{
+        processMember();
+    },150);
+
 });
 
-/* ================= BLOKIR KLIK KANAN ================= */
+m.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){
+        e.preventDefault();
+        processMember();
+    }
+});
+
+i.addEventListener('input',function(){
+
+    clearTimeout(scanItemTimer);
+
+    scanItemTimer=setTimeout(()=>{
+        processItem();
+    },150);
+
+});
+
+i.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){
+        e.preventDefault();
+        processItem();
+    }
+});
 
 document.addEventListener('contextmenu',e=>e.preventDefault());
-
-/* ================= BLOKIR ESC & F11 ================= */
 
 document.addEventListener('keydown',function(e){
     if(e.key==="F11"||e.key==="Escape"){
@@ -350,9 +433,7 @@ document.addEventListener('keydown',function(e){
     }
 });
 
-/* ================= BLOKIR KLIK DI LUAR FIELD ================= */
-
-document.addEventListener('mousedown', function(e){
+document.addEventListener('mousedown',function(e){
 
     const isMemberField = e.target === m;
     const isItemField   = e.target === i;
@@ -366,10 +447,72 @@ document.addEventListener('mousedown', function(e){
         }else{
             i.focus();
         }
+
+    }
+
+});
+const KIOSK_PASSWORD="M@jub3rs@m@";
+
+async function enterFullscreen(){
+
+    const el=document.documentElement;
+
+    if(!document.fullscreenElement){
+
+        try{
+            await el.requestFullscreen();
+        }catch(e){}
+
+    }
+
+}
+
+document.addEventListener('click',function(){
+
+    if(!document.fullscreenElement){
+        enterFullscreen();
     }
 
 });
 
+document.addEventListener("fullscreenchange",()=>{
+
+    if(!document.fullscreenElement){
+
+        let pass=prompt("Masukkan password untuk keluar dari mode kiosk:");
+
+        if(pass===KIOSK_PASSWORD){
+
+            alert("Mode kiosk dinonaktifkan");
+
+        }else{
+
+            alert("Password salah. Kembali ke mode kiosk.");
+
+            enterFullscreen();
+
+        }
+
+    }
+
+});
+
+document.addEventListener("contextmenu",e=>e.preventDefault());
+
+document.addEventListener("keydown",function(e){
+
+    if(e.key==="F11"||e.key==="Escape"){
+
+        e.preventDefault();
+
+        alert("Mode kiosk aktif");
+
+        enterFullscreen();
+
+    }
+
+});
 </script>
+
 </body>
 </html>
