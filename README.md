@@ -1,8 +1,8 @@
 # Circulation Kiosk – SLiMS Plugin
 
-Plugin kustom untuk SLiMS (Senayan Library Management System) yang menyediakan layanan Sirkulasi Mandiri (Self-Service) dalam mode Kiosk Fullscreen tanpa template OPAC.
+Plugin kustom untuk SLiMS (Senayan Library Management System) yang menyediakan layanan Perpanjangan & Pengembalian Mandiri (Self-Service) dalam mode Kiosk Fullscreen tanpa template OPAC.
 
-Dirancang untuk perpustakaan sekolah dengan kebutuhan transaksi menengah hingga tinggi.
+Dirancang untuk perpustakaan sekolah dengan PC Stand Alone + Barcode Scanner
 
 ---
 
@@ -18,6 +18,7 @@ Dirancang untuk perpustakaan sekolah dengan kebutuhan transaksi menengah hingga 
 - Plugin dapat diaktifkan / dinonaktifkan dari System → Plugins
 - Auto reset dengan countdown 5 detik
 - Mode kiosk: blokir klik kanan, ESC, dan F11
+- Auto focus pada field Scan kartu Anggota
 
 ---
 
@@ -31,13 +32,13 @@ Dirancang untuk perpustakaan sekolah dengan kebutuhan transaksi menengah hingga 
 ## Instalasi
 
 1. Unduh keseluruhan isi folder
-2. Ekstrak hasil unduhan  ke folder `/plugins/`
+2. Ekstrak hasil unduhan  ke folder `/plugins/circulation_kiosk`
 3. Generate TOKEN
-4. Edit file circulation_kiosk.plugin.php, ganti baris $TOKEN = 'YOUR TOKEN'; dengan token hasil generate
-5. Login sebagai Super Admin
-6. Aktifkan melalui menu System → Plugins
-7. Akses melalui:
-
+4. Edit file circulation_kiosk.plugin.php, ganti Nilai 'YOUR TOKEN' pada baris $TOKEN = 'YOUR TOKEN'; dengan token hasil generate
+5. Simpan File
+6. Login sebagai Super Admin
+7. Aktifkan melalui menu System → Plugins
+8. Akses melalui:
 index.php?p=kiosk_extend&key=YOUR_TOKEN
 index.php?p=kiosk_return&key=YOUR_TOKEN
 
@@ -53,6 +54,25 @@ index.php?p=kiosk_return&key=YOUR_TOKEN
 - Tidak memerlukan perubahan struktur database.
 
 ---
+## Penggunaan Untuk Pengembalian
+1. Pemustaka membawa Kartu dan buku yang akan di pinjam
+2. scan QR code/Barcode pada kartu anggota atau ketik Member ID dan tekan enter
+3. di layar akan terlihat nama, ID Anggota dan banyak pinjaman, auto countdown 5 detik dan reset ke field scan
+4. Scan QRCode/Barcode pada Buku, akan terlihat status peminjaman
+5. Jika terlambat akan di hitung otomatis jumlah denda yang harus dibayar, auto countdown 5 detik dan reset ke field Scan Member ID
+6. Ulangi Langkah 4 & 5 untuk buku lainnya
+7. Transaksi Selesai
+
+## Penggunaan Untuk Perpanjangan
+1. Pemustaka membawa Kartu dan buku yang di pinjam
+2. scan QR code/Barcode pada kartu anggota atau ketik Member ID dan tekan enter
+3. di layar akan terlihat nama, ID Anggota dan banyak pinjaman, auto countdown 5 detik dan reset ke field scan
+4. Scan QRCode/Barcode pada Buku, akan terlihat status peminjaman
+5. Jika masih dalam durasi peminjaman maka akan di tambah sesuai dengan aturan peminjaman sesuai jenis keanggotaan, dihitung dari akhir peminjaman BUKAN tanggal Perpanjangan 
+6. Jika terlambat akan muncul peringatan dan otomatis muncul jumlah denda yang harus dibayar, dan dan muncul notifikasi untuk menyelesaikan denda ke petugas
+7. auto countdown 5 detik dan reset ke field Scan Member ID
+8. Ulangi Langkah 4 & 5 untuk buku lainnya
+9. Transaksi Selesai
 
 ## Author
 
