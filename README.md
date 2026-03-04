@@ -5,6 +5,8 @@ Plugin kustom untuk SLiMS (Senayan Library Management System) yang menyediakan l
 Dirancang untuk perpustakaan sekolah dengan PC Stand Alone + Barcode Scanner
 
 ---
+<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/b6d62fdb-7356-41da-bc52-eb0af8876b3d" />
+<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/d2387d48-03ec-4897-bcc1-be66f576b223" />
 
 ## Fitur
 
