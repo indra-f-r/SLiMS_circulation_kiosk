@@ -35,22 +35,7 @@ Plugins::hook(Plugins::CONTENT_BEFORE_LOAD, function () {
     */
     $TOKEN = 'YOUR TOKEN';
 
-    /*
-    |--------------------------------------------------------------------------
-    | FULL KIOSK
-    |--------------------------------------------------------------------------
-    */
-    if ($page === 'kiosk') {
-
-        if ($key !== $TOKEN) {
-            http_response_code(403);
-            die('ACCESS DENIED');
-        }
-
-        require __DIR__ . '/landing_kiosk.php';
-        exit;
-    }
-    
+  
     /*
     |--------------------------------------------------------------------------
     | SELF EXTEND
@@ -85,6 +70,7 @@ Plugins::hook(Plugins::CONTENT_BEFORE_LOAD, function () {
 
 
 });
+
 
 
 
