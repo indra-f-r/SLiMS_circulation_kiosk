@@ -25,7 +25,7 @@ Dirancang untuk perpustakaan sekolah dengan PC Stand Alone + Barcode Scanner
 ---
 
 ## Struktur File
-- circulation_kiosk.plugin.php
+- kiosk.plugin.php
 - self_extend_kiosk.php
 - self_return_kiosk.php
 
