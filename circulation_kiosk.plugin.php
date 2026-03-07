@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Circulation Kiosk
+ * Plugin Name: Self Extend & Return Kiosk
  * Plugin URI: https://github.com/indra-f-r/SLiMS_circulation_kiosk
  * Description: Plugin Pengembalian dan Perpanjangan Mandiri SLiMS (Full Kiosk Mode)
  * Version: 1.2.0
@@ -85,6 +85,7 @@ Plugins::hook(Plugins::CONTENT_BEFORE_LOAD, function () {
 
 
 });
+
 
 
 
