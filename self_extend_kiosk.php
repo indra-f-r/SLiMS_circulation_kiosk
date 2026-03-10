@@ -1,5 +1,12 @@
 <?php
 
+/* memastikan sysconfig SLiMS selalu terload */
+if (!isset($sysconf)) {
+    require_once __DIR__.'/../../sysconfig.inc.php';
+}
+
+global $sysconf;
+
 use SLiMS\DB;
 
 $db = DB::getInstance();
@@ -136,8 +143,14 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     }
 }
 
-$baseURL=rtrim($sysconf['baseurl'],'/').'/';
-$logo=$baseURL.'images/default/logo.png?v='.time();
+$baseURL = rtrim($sysconf['baseurl'] ?? '', '/') . '/';
+
+/* fallback untuk localhost */
+if(!$baseURL){
+    $logo='../../images/default/logo.png?v='.time();
+}else{
+    $logo=$baseURL.'images/default/logo.png?v='.time();
+}
 
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache");
@@ -165,15 +178,38 @@ body{
   margin-top:25px;
 }
 
-input{
+.scan-row{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  margin:14px auto;
   width:700px;
   max-width:90%;
+}
+
+.scan-row input{
+  flex:1;
   padding:20px;
   font-size:24px;
   border-radius:12px;
   border:none;
-  margin:14px;
   text-align:center;
+}
+
+.reset-btn{
+  padding:16px 22px;
+  font-size:16px;
+  border-radius:10px;
+  border:none;
+  background:#ff5252;
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.reset-btn:hover{
+  background:#ff1744;
 }
 
 .info{
@@ -251,9 +287,15 @@ Silakan hubungi petugas
 </div>
 </div>
 
+<div class="scan-row">
 <input id="member" placeholder="MASUKKAN MEMBER ID / SCAN KARTU ANGGOTA">
-<br>
+<button class="reset-btn" onclick="resetMember()">RESET</button>
+</div>
+
+<div class="scan-row">
 <input id="item" placeholder="MASUKKAN ITEM ID / SCAN BARCODE BUKU" disabled>
+<button class="reset-btn" onclick="resetItem()">RESET</button>
+</div>
 
 <div id="memberInfo" class="info"></div>
 <div id="result" class="result"></div>
@@ -451,21 +493,7 @@ document.addEventListener('mousedown',function(e){
     }
 
 });
-const KIOSK_PASSWORD="M@jub3rs@m@";
-
-async function enterFullscreen(){
-
-    const el=document.documentElement;
-
-    if(!document.fullscreenElement){
-
-        try{
-            await el.requestFullscreen();
-        }catch(e){}
-
-    }
-
-}
+const KIOSK_PASSWORD="YOUR_PASSWORD";
 
 document.addEventListener('click',function(){
 
@@ -512,6 +540,29 @@ document.addEventListener("keydown",function(e){
     }
 
 });
+
+function resetMember(){
+
+    m.value='';
+    memberInfo.innerHTML='';
+    result.innerHTML='';
+    countdown.innerHTML='';
+
+    m.disabled=false;
+    i.disabled=true;
+
+    m.focus();
+}
+
+function resetItem(){
+
+    i.value='';
+    result.innerHTML='';
+    countdown.innerHTML='';
+
+    i.focus();
+}
+
 </script>
 
 </body>
