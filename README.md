@@ -5,21 +5,24 @@ Plugin kustom untuk SLiMS (Senayan Library Management System) yang menyediakan l
 Dirancang untuk perpustakaan sekolah dengan PC Stand Alone + Barcode Scanner
 
 ---
-<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/b6d62fdb-7356-41da-bc52-eb0af8876b3d" />
-<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/d2387d48-03ec-4897-bcc1-be66f576b223" />
+
 
 ## Fitur
 
 - Fullscreen kiosk tanpa header dan footer OPAC
 - Self Extend (Perpanjangan Mandiri)
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/99672b03-eb49-452e-a8d6-21f725c762c8" />
 - Self Return (Pengembalian Mandiri)
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/0a122624-5743-43b2-bb7e-b147118ac154" />
 - Perpanjangan maksimal 1 kali (field `loan.renewed`)
 - Perhitungan jatuh tempo berdasarkan `mst_member_type.loan_periode`
 - Logging otomatis ke `system_log`
 - Akses berbasis token (`?key=TOKEN`), Token dapat di generate melalui token generator, misal https://openreplay.com/tools/token-generator/
 - Plugin dapat diaktifkan / dinonaktifkan dari System → Plugins
 - Auto reset dengan countdown 5 detik
-- Mode kiosk: blokir klik kanan, ESC, dan F11
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/750c78ae-e153-4d72-8031-953e267810ac" />
+- Mode kiosk: blokir klik kanan, ESC, dan F11 dengan menggunakan password
+<img width="460" height="207" alt="image" src="https://github.com/user-attachments/assets/91b4b94c-3638-4bd0-a0d6-1de9910a642d" />
 - Auto focus pada field Scan kartu Anggota
 
 ---
@@ -37,12 +40,13 @@ Dirancang untuk perpustakaan sekolah dengan PC Stand Alone + Barcode Scanner
 2. Ekstrak hasil unduhan  ke folder `/plugins/circulation_kiosk`
 3. Generate TOKEN
 4. Edit file circulation_kiosk.plugin.php, ganti Nilai 'YOUR TOKEN' pada baris $TOKEN = 'YOUR TOKEN'; dengan token hasil generate
-5. Simpan File
-6. Login sebagai Super Admin
-7. Aktifkan melalui menu System → Plugins
-8. Akses melalui:
-index.php?p=kiosk_extend&key=YOUR_TOKEN
-index.php?p=kiosk_return&key=YOUR_TOKEN
+5. Edit file self_extend_kiosk.php / self_extend_kiosk.php, cari field KIOSK_PASSWORD=YOUR_PASSWORD, silakan ganti YOUR_PASSWORD dengan password yang diinginkan untuk keuluar dari state fullscreen 
+6. Simpan File
+7. Login sebagai Super Admin
+8. Aktifkan melalui menu System → Plugins
+9. Akses melalui:
+- index.php?p=kiosk_extend&key=YOUR_TOKEN
+- index.php?p=kiosk_return&key=YOUR_TOKEN
 
 ---
 
