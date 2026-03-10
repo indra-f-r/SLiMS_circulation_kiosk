@@ -3,7 +3,7 @@
  * Plugin Name: Layanan Pengembalian dan Perpanjangan Mandiri
  * Plugin URI: https://github.com/indra-f-r/SLiMS_circulation_kiosk
  * Description: Plugin Layanan Pengembalian dan Perpanjangan Mandiri
- * Version: 1.5.0
+ * Version: 1.7.0
  * Author: Indra Febriana Rulliawan (indra.f.rulliawan@gmail.com)
  * Author URI: digilib.wacanateknologi.id
  */
@@ -65,3 +65,4 @@ Plugins::hook(Plugins::CONTENT_BEFORE_LOAD, function () {
 
 
 });
+
