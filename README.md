@@ -1,6 +1,10 @@
 # 📚 SLiMS Kiosk Mandiri: Layanan Pengembalian & Perpanjangan
 Sebuah Plugin antarmuka Layanan Sirkulasi Mandiri untuk **SLiMS (Senayan Library Management System)**. Plugin ini memisahkan dan mengoptimalkan dua layanan utama perpustakaan: **Pengembalian Mandiri (Self-Return)** dan **Perpanjangan Mandiri (Self-Extend)** ke dalam antarmuka *State-based* yang modern, ramah layar sentuh (*touch-friendly*), dan dilengkapi dengan *Token Authentication* untuk keamanan akses Kiosk.
 
+<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/d7b5139e-7e60-49b2-9e06-9da6f5449a50" />
+
+<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/0e342505-851d-4f48-9df8-ef227d41a4f5" />
+
 **Versi:** 1.8.0  
 **Penulis:** Indra Febriana Rulliawan (indra.f.rulliawan@gmail.com | digilib.wacanateknologi.id)  
 **Repositori:** [SLiMS_circulation_kiosk](https://github.com/indra-f-r/SLiMS_circulation_kiosk)
@@ -21,17 +25,24 @@ Sebuah Plugin antarmuka Layanan Sirkulasi Mandiri untuk **SLiMS (Senayan Library
 ### 1. Alur Kiosk Pengembalian (Self-Return)
 1. **Scan Kartu**: Pemustaka men-scan kartu anggota.
 2. **Cek Pinjaman**: Sistem menampilkan Nama, ID, dan daftar rinci judul buku yang masih dipinjam.
+   <img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/3bb267d6-7552-4871-b1c1-a52f8ec338e4" />
 3. **Scan Buku**: Pemustaka men-scan *barcode* buku.
 4. **Validasi & Denda**: Sistem otomatis menghitung denda jika terlambat (mengabaikan hari libur nasional & akhir pekan).
 5. **Review Kondisi**: Muncul pop-up *rating* 1-5 bintang untuk menilai fisik buku.
+<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/27b5fd35-d8a7-4114-98e3-19e616c5cbde" />
+<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/d347d1ef-8c30-4bf9-b117-c7a6212a3d33" />
+
+
 6. **Selesai**: Sesi mereset otomatis dalam 15 detik atau jika ditekan tombol selesai.
 
 ### 2. Alur Kiosk Perpanjangan (Self-Extend)
 1. **Scan Kartu**: Pemustaka men-scan kartu anggota.
 2. **Cek Pinjaman**: Sistem menampilkan daftar buku yang dipinjam beserta tanggal jatuh tempo saat ini.
-3. **Scan Buku**: Pemustaka men-scan buku yang ingin diperpanjang.
-4. **Validasi Syarat**: Sistem menolak perpanjangan jika buku sudah *Overdue* (lewat jatuh tempo) atau sudah mencapai limit maksimal perpanjangan (*renewed*).
-5. **Perpanjangan Sukses**: Tanggal jatuh tempo baru ditambahkan dan ditampilkan di layar.
+   <img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/84a53b62-a1fa-4fe9-abb3-2424b0d0f432" />
+
+4. **Scan Buku**: Pemustaka men-scan buku yang ingin diperpanjang.
+5. **Validasi Syarat**: Sistem menolak perpanjangan jika buku sudah *Overdue* (lewat jatuh tempo) atau sudah mencapai limit maksimal perpanjangan (*renewed*).
+6. **Perpanjangan Sukses**: Tanggal jatuh tempo baru ditambahkan dan ditampilkan di layar.
 
 ## 🛠️ Instalasi & Konfigurasi
 
