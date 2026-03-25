@@ -201,7 +201,7 @@ header("Pragma: no-cache");
 let curMember = null;
 let curBiblio = null;
 let isProcessing = false; // Flag Anti Double-Scan
-const KIOSK_PASSWORD = "M@jub3rs@m@";
+const KIOSK_PASSWORD = "[YOUR_PASSWORD]";
 
 // ==========================================
 // BLOK JAVASCRIPT: TIMER VISUAL GLOBAL
