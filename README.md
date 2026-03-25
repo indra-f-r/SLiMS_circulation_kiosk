@@ -105,7 +105,7 @@ Jika Anda ingin menyesuaikan beberapa parameter UI/UX, silakan buka file `self_r
 Jika Anda menemukan *bug* atau memiliki ide penambahan fitur (seperti panel admin untuk mengelola hasil *review* buku), silakan buat *Pull Request* atau laporkan di kolom *Issues* repositori GitHub ini. Mari bersama bangun ekosistem SLiMS yang lebih baik!
 
 ## 📄 Lisensi
-Di distribusikan di bawah lisensi GNU GPL v3. (Menyesuaikan dengan lisensi inti SLiMS).
+Di distribusikan di bawah lisensi GNU GPL v3.
 
 ---
 *Dikembangkan dengan ☕ untuk mempermudah tugas Pustakawan dan memanjakan Pemustaka.* 🚀
