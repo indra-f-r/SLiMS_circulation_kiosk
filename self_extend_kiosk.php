@@ -168,7 +168,7 @@ header("Pragma: no-cache");
 <script>
 let curMember = null;
 let isProcessing = false; 
-const KIOSK_PASSWORD = "M@jub3rs@m@";
+const KIOSK_PASSWORD = "[YOUR_PASSWORD]";
 
 // ==========================================
 // BLOK JAVASCRIPT: TIMER VISUAL GLOBAL
