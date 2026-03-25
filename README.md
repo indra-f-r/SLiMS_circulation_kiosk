@@ -1,87 +1,102 @@
-# Circulation Kiosk – SLiMS Plugin
+# 📚 SLiMS Kiosk Mandiri: Layanan Pengembalian & Perpanjangan
+Sebuah Plugin antarmuka Layanan Sirkulasi Mandiri untuk **SLiMS (Senayan Library Management System)**. Plugin ini memisahkan dan mengoptimalkan dua layanan utama perpustakaan: **Pengembalian Mandiri (Self-Return)** dan **Perpanjangan Mandiri (Self-Extend)** ke dalam antarmuka *State-based* yang modern, ramah layar sentuh (*touch-friendly*), dan dilengkapi dengan *Token Authentication* untuk keamanan akses Kiosk.
 
-Plugin kustom untuk SLiMS (Senayan Library Management System) yang menyediakan layanan Perpanjangan & Pengembalian Mandiri (Self-Service) dalam mode Kiosk Fullscreen tanpa template OPAC.
+**Versi:** 1.8.0  
+**Penulis:** Indra Febriana Rulliawan (indra.f.rulliawan@gmail.com | digilib.wacanateknologi.id)  
+**Repositori:** [SLiMS_circulation_kiosk](https://github.com/indra-f-r/SLiMS_circulation_kiosk)
 
-Dirancang untuk perpustakaan sekolah dengan PC Stand Alone + Barcode Scanner
+## ✨ Fitur Unggulan
+* 🔐 **Token Authentication**: Akses halaman kiosk dilindungi oleh parameter Token unik. URL tidak bisa ditebak atau diakses sembarangan oleh pemustaka dari perangkat pribadi mereka.
+* ⚙️ **Auto-Initialize Database**: Saat plugin diaktifkan, sistem akan otomatis memeriksa dan membuat tabel `book_review` di *database* jika belum ada, tanpa merusak data yang sudah ada.
+* 🚀 **State-Based UI**: Transisi antarmuka yang mulus. Layar Scan Member dan Layar Scan Buku dipisah agar pemustaka tidak salah memasukkan ID ke kolom yang keliru.
+* 🛡️ **Anti Double-Scan (Cut-off)**: Mengunci kolom *input* secara dinamis dalam hitungan milidetik saat sistem memproses *request*, mencegah *error* atau beban *database* ganda.
+* 🧹 **Super Cleaner & Safe Query**: Membersihkan input karakter "gaib" dari mesin *scanner* (Regex), serta menggunakan `LEFT JOIN` agar aplikasi tidak *crash* meskipun master data katalog terhapus oleh admin.
+* ⏱️ **Visual Auto-Reset Timer**: Hitung mundur otomatis (30/45 detik) yang terlihat di layar untuk mereset sesi jika pemustaka tiba-tiba pergi dari mesin Kiosk.
+* 🎯 **Persistent Auto-Focus**: Mencegah *Virtual Keyboard* muncul mengganggu. Kursor akan otomatis kembali ke dalam kolom *input* yang benar meskipun layar sentuh tidak sengaja tersentuh.
+* ⭐ **Dynamic Pop-Up Review (Khusus Pengembalian)**: Pemustaka dapat memberikan *rating* bintang (1-5) dan melaporkan kondisi fisik buku yang dikembalikan dengan pilihan teks yang dinamis.
+* 🔒 **Kiosk Protection**: Memaksa mode *Fullscreen* otomatis dan mencegah pemustaka keluar dari antarmuka kiosk (Membutuhkan *Password* untuk *Exit*).
+
+## 🔄 Alur Penggunaan (User Flow)
+
+### 1. Alur Kiosk Pengembalian (Self-Return)
+1. **Scan Kartu**: Pemustaka men-scan kartu anggota.
+2. **Cek Pinjaman**: Sistem menampilkan Nama, ID, dan daftar rinci judul buku yang masih dipinjam.
+3. **Scan Buku**: Pemustaka men-scan *barcode* buku.
+4. **Validasi & Denda**: Sistem otomatis menghitung denda jika terlambat (mengabaikan hari libur nasional & akhir pekan).
+5. **Review Kondisi**: Muncul pop-up *rating* 1-5 bintang untuk menilai fisik buku.
+6. **Selesai**: Sesi mereset otomatis dalam 15 detik atau jika ditekan tombol selesai.
+
+### 2. Alur Kiosk Perpanjangan (Self-Extend)
+1. **Scan Kartu**: Pemustaka men-scan kartu anggota.
+2. **Cek Pinjaman**: Sistem menampilkan daftar buku yang dipinjam beserta tanggal jatuh tempo saat ini.
+3. **Scan Buku**: Pemustaka men-scan buku yang ingin diperpanjang.
+4. **Validasi Syarat**: Sistem menolak perpanjangan jika buku sudah *Overdue* (lewat jatuh tempo) atau sudah mencapai limit maksimal perpanjangan (*renewed*).
+5. **Perpanjangan Sukses**: Tanggal jatuh tempo baru ditambahkan dan ditampilkan di layar.
+
+## 🛠️ Instalasi & Konfigurasi
+
+### 1. Persiapan File
+1. *Clone* atau unduh *source code* dari repositori ini.
+2. Buat folder baru bernama `SLiMS_circulation_kiosk` di dalam folder `plugins` SLiMS Anda.  
+   *(Contoh path: `C:\laragon\www\slims\plugins\SLiMS_circulation_kiosk\`)*
+3. Pastikan file `kiosk.plugin.php`, `self_return_kiosk.php`, dan `self_extend_kiosk.php` berada di dalam folder tersebut.
+
+### 2. Konfigurasi Token Keamanan
+Aplikasi ini membutuhkan *Security Token* untuk mencegah akses tanpa izin.
+1. Hasilkan token acak yang aman. Anda bisa menggunakan *tools* seperti [OpenReplay Token Generator](https://openreplay.com/tools/token-generator/).
+   > ⚠️ **SANGAT PENTING:** Gunakan hanya kombinasi huruf dan angka (Alphanumeric). **JANGAN menggunakan karakter spesial** (`!@#$%^&*` dsb) agar URL parameter tidak bermasalah (URL *Broken*).
+2. Buka file `kiosk.plugin.php` menggunakan *Text Editor*.
+3. Cari variabel `$TOKEN` dan masukkan token yang sudah Anda hasilkan.
+   ```php
+   $TOKEN = 'MasukkanTokenAndaDisiniTanpaKarakterSpesial123';
+   ```
+
+### 3. Aktivasi Plugin SLiMS
+Agar plugin dapat berjalan dan tabel `book_review` otomatis terbuat, Anda harus mendaftarkannya pada sistem SLiMS:
+1. Masuk ke halaman **Admin SLiMS** > **Sistem** > **Plugin**.
+2. Aktifkan plugin **Layanan Pengembalian dan Perpanjangan Mandiri**.
+
+### 4. Akses Laman Kiosk
+Buka *browser* pada mesin Kiosk/Komputer Perpustakaan Anda dan gunakan format URL berikut (sesuaikan domain dan token Anda):
+
+* **Laman Kiosk Perpanjangan:**
+  ```text
+  http://[domain-slims-anda]/?p=kiosk_extend&key=[TOKEN_ANDA]
+  ```
+* **Laman Kiosk Pengembalian:**
+  ```text
+  http://[domain-slims-anda]/?p=kiosk_return&key=[TOKEN_ANDA]
+  ```
+> **Tip:** Jadikan URL tersebut sebagai *Bookmark* atau *Shortcut Browser Start-up* di komputer Kiosk Anda. Layar akan otomatis meminta izin *Fullscreen*.
+
+## 📂 Struktur Folder
+```text
+slims_root/
+├── ...
+└── plugins/
+    └── SLiMS_circulation_kiosk/
+        ├── kiosk.plugin.php         # Router, Database Initializer & Interceptor Plugin
+        ├── self_return_kiosk.php    # UI & Logika Pengembalian Mandiri
+        └── self_extend_kiosk.php    # UI & Logika Perpanjangan Mandiri
+```
+
+## ⚙️ Pengaturan Lanjutan (Tweak)
+Jika Anda ingin menyesuaikan beberapa parameter UI/UX, silakan buka file `self_return_kiosk.php` atau `self_extend_kiosk.php` dengan *text editor*:
+* **Password Keluar Mode Kiosk:** Cari `const KIOSK_PASSWORD = "[YOUR_PASSWORD";` dan ubah sesuai standar keamanan perpustakaan Anda.
+* **Durasi Timer Visual:** Cari `startVisualTimer(45, 'cdState2');`. Ubah `45` menjadi durasi detik yang Anda inginkan.
+* **Biaya Denda (Khusus Return):** Cari baris `$fine=$late*1000;`. Ubah angka `1000` dengan tarif denda harian (dalam Rupiah) yang berlaku di perpustakaan Anda.
+
+## ⚠️ Troubleshooting (Masalah Umum)
+* **Kursor Hilang saat Layar Disentuh / Virtual Keyboard Muncul:** Ini adalah respon bawaan *Touchscreen* Windows/Android. Fitur *Auto-focus* di script akan langsung menarik kursor kembali. Namun, jika *Virtual Keyboard* muncul dan menutupi layar, silakan matikan fitur *Virtual Keyboard* di pengaturan OS perangkat keras Anda (Kiosk ini didesain menggunakan *Barcode Scanner* Fisik).
+* **Tabel Book Review Tidak Terbuat:** Pastikan *user database* SLiMS Anda memiliki hak akses `CREATE TABLE`. Fitur ini dieksekusi sekali saat *plugin* dimuat di SLiMS.
+
+## 🤝 Kontribusi & Dukungan
+Jika Anda menemukan *bug* atau memiliki ide penambahan fitur (seperti panel admin untuk mengelola hasil *review* buku), silakan buat *Pull Request* atau laporkan di kolom *Issues* repositori GitHub ini. Mari bersama bangun ekosistem SLiMS yang lebih baik!
+
+## 📄 Lisensi
+Di distribusikan di bawah lisensi GNU GPL v3. (Menyesuaikan dengan lisensi inti SLiMS).
 
 ---
+*Dikembangkan dengan ☕ untuk mempermudah tugas Pustakawan dan memanjakan Pemustaka.* 🚀
 
-
-## Fitur
-
-- Fullscreen kiosk tanpa header dan footer OPAC
-- Self Extend (Perpanjangan Mandiri)
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/99672b03-eb49-452e-a8d6-21f725c762c8" />
-- Self Return (Pengembalian Mandiri)
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/0a122624-5743-43b2-bb7e-b147118ac154" />
-- Perpanjangan maksimal 1 kali (field `loan.renewed`)
-- Perhitungan jatuh tempo berdasarkan `mst_member_type.loan_periode`
-- Logging otomatis ke `system_log`
-- Akses berbasis token (`?key=TOKEN`), Token dapat di generate melalui token generator, misal https://openreplay.com/tools/token-generator/
-- Plugin dapat diaktifkan / dinonaktifkan dari System → Plugins
-- Auto reset dengan countdown 5 detik
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/750c78ae-e153-4d72-8031-953e267810ac" />
-- Mode kiosk: blokir klik kanan, ESC, dan F11 dengan menggunakan password
-<img width="460" height="207" alt="image" src="https://github.com/user-attachments/assets/91b4b94c-3638-4bd0-a0d6-1de9910a642d" />
-- Auto focus pada field Scan kartu Anggota
-
----
-
-## Struktur File
-- kiosk.plugin.php
-- self_extend_kiosk.php
-- self_return_kiosk.php
-
----
-
-## Instalasi
-
-1. Unduh keseluruhan isi folder
-2. Ekstrak hasil unduhan  ke folder `/plugins/circulation_kiosk`
-3. Generate TOKEN
-4. Edit file circulation_kiosk.plugin.php, ganti Nilai 'YOUR TOKEN' pada baris $TOKEN = 'YOUR TOKEN'; dengan token hasil generate
-5. Edit file self_extend_kiosk.php / self_extend_kiosk.php, cari field KIOSK_PASSWORD=YOUR_PASSWORD, silakan ganti YOUR_PASSWORD dengan password yang diinginkan untuk keuluar dari state fullscreen 
-6. Simpan File
-7. Login sebagai Super Admin
-8. Aktifkan melalui menu System → Plugins
-9. Akses melalui:
-- index.php?p=kiosk_extend&key=YOUR_TOKEN
-- index.php?p=kiosk_return&key=YOUR_TOKEN
-
----
-
-## Menggunakan Field Bawaan SLiMS
-
-- loan.renewed
-- loan.due_date
-- loan.is_return
-- mst_member_type.loan_periode
-- system_log
-- Tidak memerlukan perubahan struktur database.
-
----
-## Penggunaan Untuk Pengembalian
-1. Pemustaka membawa Kartu dan buku yang akan di pinjam
-2. scan QR code/Barcode pada kartu anggota atau ketik Member ID dan tekan enter
-3. di layar akan terlihat nama, ID Anggota dan banyak pinjaman, auto countdown 5 detik dan reset ke field scan
-4. Scan QRCode/Barcode pada Buku, akan terlihat status peminjaman
-5. Jika terlambat akan di hitung otomatis jumlah denda yang harus dibayar, auto countdown 5 detik dan reset ke field Scan Member ID
-6. Ulangi Langkah 4 & 5 untuk buku lainnya
-7. Transaksi Selesai
-
-## Penggunaan Untuk Perpanjangan
-1. Pemustaka membawa Kartu dan buku yang di pinjam
-2. scan QR code/Barcode pada kartu anggota atau ketik Member ID dan tekan enter
-3. di layar akan terlihat nama, ID Anggota dan banyak pinjaman, auto countdown 5 detik dan reset ke field scan
-4. Scan QRCode/Barcode pada Buku, akan terlihat status peminjaman
-5. Jika masih dalam durasi peminjaman maka akan di tambah sesuai dengan aturan peminjaman sesuai jenis keanggotaan, dihitung dari akhir peminjaman BUKAN tanggal Perpanjangan 
-6. Jika terlambat akan muncul peringatan dan otomatis muncul jumlah denda yang harus dibayar, dan dan muncul notifikasi untuk menyelesaikan denda ke petugas, auto countdown 5 detik dan reset ke field Scan Member ID
-8. Ulangi Langkah 4 s.d 6 untuk buku lainnya
-9. Transaksi Selesai
-
-## Author
-
-Original base: Erwan Setyo Budi  
-Modified & Extended: Indra Febriana Rulliawan
-
-
+***
